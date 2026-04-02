@@ -11,7 +11,9 @@ sys.path.append(str(src_path))
 from config import Config
 from parking_space_detector import ParkingSpaceDetector
 
-REFERENCE_IMAGE_PATH = "C:/Users/mhdda/parking_system/data/PKLot/UFPR05/Sunny/2013-03-02/2013-03-02_06_45_00.jpg"
+PROJECT_ROOT = Path(__file__).parent.resolve()
+REFERENCE_IMAGE_PATH = str(PROJECT_ROOT / "data" / "PKLot" / "UFPR05" / "Sunny" / "2013-03-02" / "2013-03-02_06_45_00.jpg")
+
 
 OUTPUT_JSON_FILE = "parking_spaces.json"
 
@@ -35,7 +37,6 @@ def main():
         
     print(f"Loaded reference image: {REFERENCE_IMAGE_PATH}")
     
-    # 2. Run the manual definition tool
     print("\nStarting manual definition tool...")
     spaces = detector.define_parking_spaces_manual(image)
     
@@ -43,7 +44,6 @@ def main():
         print("No spaces were defined. Exiting.")
         return
         
-    # 3. Save the defined spaces
     print(f"\nDefined {len(spaces)} spaces.")
     detector.save_parking_spaces(spaces, OUTPUT_JSON_FILE)
     print(f"Successfully saved parking spaces to data/processed/{OUTPUT_JSON_FILE}")

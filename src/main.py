@@ -1,4 +1,3 @@
-# src/main.py
 import cv2
 import numpy as np
 from pathlib import Path
@@ -20,7 +19,6 @@ class ParkingSystem:
         self.classifier = OccupancyClassifier(self.config)
         self.estimator = WidthEstimator(self.config)
         
-        # Load the predefined parking spaces
         self.parking_spaces = self.detector.load_parking_spaces('parking_spaces.json')
         print(f"Loaded {len(self.parking_spaces)} parking spaces.")
         
@@ -68,21 +66,19 @@ class ParkingSystem:
             if occupancy_status == 'Occupied':
                 color = (0, 0, 255) 
                 
-                # 5. Detect vehicle and measure width
                 has_vehicle, mask, contour_area = self.estimator.detect_vehicle_in_space(roi)
                 if has_vehicle:
-                    roi_area = roi.shape[0] * roi.shape[1] # Total pixels in the ROI
+                    roi_area = roi.shape[0] * roi.shape[1] 
                     occupancy_percentage = contour_area / roi_area
 
                     
                     MIN_OCCUPANCY_THRESHOLD = 0.3
 
-                    if occupancy_percentage < MIN_OCCUPANCY_THRESHOLD:
-                        
+                    if occupancy_percentage < MIN_OCCUPANCY_THRESHOLD and confidence < 0.85:
                         occupancy_status = "Empty"
                         space_result['occupancy'] = "Empty"
                         color = (0, 255, 0) 
-                        has_vehicle = False 
+                        has_vehicle = False
             
                 if has_vehicle:
                     assessment, offset = self.estimator.assess_centering(roi, mask)
@@ -92,7 +88,6 @@ class ParkingSystem:
             
             results.append(space_result)
 
-            # 7. Visualize
             if visualize:
                 cv2.polylines(result_image, [corners.astype(np.int32)], True, color, 2)
                 
@@ -109,8 +104,11 @@ class ParkingSystem:
 
 if __name__ == "__main__":
 
-    BASE_PATH = "c:/Users/mhdda/parking_system/data/PKLot/UFPR05" #2013-03-20_17_05_12
-    # C:/Users/mhdda/parking_system/data/PKLot/UFPR05/Sunny/2013-03-02/2013-03-02_06_45_00.jpg
+    SCRIPT_DIR = Path(__file__).parent.resolve()
+
+    PROJECT_ROOT = SCRIPT_DIR.parent
+    BASE_PATH = PROJECT_ROOT / "data" / "PKLot" / "UFPR05"
+
     TEST_IMAGE_PATHS = [
         f"{BASE_PATH}/Sunny/2013-03-02/2013-03-02_06_45_00.jpg",
         f"{BASE_PATH}/Cloudy/2013-03-13/2013-03-13_07_25_01.jpg",
@@ -119,7 +117,7 @@ if __name__ == "__main__":
         f"{BASE_PATH}/Rainy/2013-03-05/2013-03-05_16_15_11.jpg" 
     ]
     
-    MODEL_FILE = "c:/Users/mhdda/parking_system/models/svm_model.pkl"
+    MODEL_FILE = str(PROJECT_ROOT / "models" / "svm_model.pkl")
     
     print("--- Starting Parking System (Slideshow Mode) ---")
     print("Press any key to advance to the next image. Press 'q' to quit.")
@@ -157,7 +155,7 @@ if __name__ == "__main__":
 
         display_image = result_image.copy()
         h, w = display_image.shape[:2]
-        if h > 900: # If image height is > 900px, resize it
+        if h > 900: 
             scale = 900 / h
             display_image = cv2.resize(display_image, (int(w * scale), int(h * scale)))
             

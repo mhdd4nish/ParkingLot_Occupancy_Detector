@@ -31,7 +31,6 @@ class OccupancyClassifier:
         X = np.array(features_list)
         y = np.array(labels)
         
-        # Split dataset
         X_train, X_test, y_train, y_test = train_test_split(
             X, y,
             test_size=self.config.TEST_SPLIT_RATIO,
@@ -39,7 +38,6 @@ class OccupancyClassifier:
             stratify=y
         )
         
-        # Scale features
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
         
@@ -55,7 +53,6 @@ class OccupancyClassifier:
         print(f"Mean CV score: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})")
     
     def evaluate(self, X_test: np.ndarray, y_test: np.ndarray):
-        """Evaluate the classifier"""
         y_pred = self.classifier.predict(X_test)
         
         print("\nClassification Report:")
@@ -89,7 +86,6 @@ class OccupancyClassifier:
             print(f"Error saving plot: {e}")
 
         try:
-            
             y_probs = self.classifier.predict_proba(X_test)[:, 1]
 
             fpr, tpr, thresholds = roc_curve(y_test, y_probs)

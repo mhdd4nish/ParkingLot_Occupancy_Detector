@@ -16,7 +16,7 @@ from feature_extractor import FeatureExtractor
 from occupancy_classifier import OccupancyClassifier
 
 
-SEGMENTED_DATA_DIR = "C:/Users/mhdda/parking_system/data/PKLot_segmented/UFPR05"
+SEGMENTED_DATA_DIR = config.BASE_DIR / "data" / "PKLot_segmented" / "UFPR05"
 
 MODEL_OUTPUT_FILE = "svm_model.pkl"
 
@@ -57,7 +57,7 @@ def load_dataset(base_path: Path, extractor: FeatureExtractor):
         if img is not None:
             features = extractor.extract_combined_features(img)
             features_list.append(features)
-            labels_list.append(1) # 1 for Occupied
+            labels_list.append(1) 
             
     return np.array(features_list), np.array(labels_list)
 
@@ -70,7 +70,6 @@ def main():
     
     config.MODELS_DIR.mkdir(parents=True, exist_ok=True)
     
-    # 1. Load Dataset
     print("Loading dataset...")
     data_path = Path(SEGMENTED_DATA_DIR)
     X, y = load_dataset(data_path, extractor)
@@ -89,17 +88,13 @@ def main():
     print(f"Training samples: {len(X_train)}")
     print(f"Test samples: {len(X_test)}")
     
-    # 3. Train the Model
     print("\n--- Training SVM Model ---")
     classifier.train(X_train, y_train)
     print("--- Training Complete ---")
     
-    # 4. Evaluate the Model
     print("\n--- Evaluating Model on Test Set ---")
     classifier.evaluate(X_test, y_test)
     
-    # 5. Save the Final Model
-
     print(f"\nSaving model to {config.MODELS_DIR / MODEL_OUTPUT_FILE}...")
     classifier.save_model(MODEL_OUTPUT_FILE)
     

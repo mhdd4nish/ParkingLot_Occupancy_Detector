@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 class Config:
-    # Paths
     BASE_DIR = Path(__file__).parent.parent
     DATA_DIR = BASE_DIR / "data"
     PKLOT_DIR = DATA_DIR / "PKLot" / "UFPR05"
@@ -10,10 +9,10 @@ class Config:
     RESULTS_DIR = DATA_DIR / "results"
     MODELS_DIR = BASE_DIR / "models"
     
-    # Parking space dimensions (standard in meters)
-    STANDARD_PARKING_WIDTH = 2.7  # meters
-    STANDARD_PARKING_LENGTH = 5.0  # meters
-    REQUIRED_CLEARANCE = 0.15  # 15cm on each side
+    # Parking space dimensions (meters)
+    STANDARD_PARKING_WIDTH = 2.7  
+    STANDARD_PARKING_LENGTH = 5.0  
+    REQUIRED_CLEARANCE = 0.15  
     
     ROI_PIXELS_PER_METER = 50
     # Image processing parameters

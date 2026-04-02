@@ -22,7 +22,6 @@ class WidthEstimator:
         otsu_thresh_val, car_shadow_mask = cv2.threshold(gray, 0, 255, 
                                                     cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 
-        # 2. Create a mask of just the original image (ignoring black padding)
         padding_mask = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)[1]
 
 
@@ -62,7 +61,6 @@ class WidthEstimator:
 
         largest_contour = max(contours, key=cv2.contourArea)
 
-        # 2. Find the center of the car 
         M = cv2.moments(largest_contour)
         if M["m00"] == 0:
             assessment['status'] = "Centering Error"
@@ -70,13 +68,10 @@ class WidthEstimator:
 
         car_center_x_px = int(M["m10"] / M["m00"])
 
-        # 3. Find the center of the parking space (the ROI image)
         space_center_x_px = roi.shape[1] / 2
 
-        # 4. Calculate the offset in pixels
         pixel_offset = abs(car_center_x_px - space_center_x_px)
 
-        # 5. Convert offset to meters
         offset_m = pixel_offset / self.config.ROI_PIXELS_PER_METER
         assessment['offset_m'] = round(offset_m, 2)
 

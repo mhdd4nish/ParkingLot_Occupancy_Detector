@@ -23,7 +23,6 @@ class ParkingSpaceDetector:
                 cv2.imshow("Define Parking Spaces", img_copy)
                 
                 if len(current_points) == 4:
-                    # Draw the parking space
                     pts = np.array(current_points, np.int32)
                     cv2.polylines(img_copy, [pts], True, (0, 255, 0), 2)
                     cv2.imshow("Define Parking Spaces", img_copy)
