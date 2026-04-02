@@ -8,9 +8,6 @@ env/
 
 data/PKLot/
 data/PKLot_segmented/
-*.jpg
-*.png
-*.mp4
 
 models/*.pkl
 

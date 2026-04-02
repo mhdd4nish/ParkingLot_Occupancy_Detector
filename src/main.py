@@ -39,13 +39,10 @@ class ParkingSystem:
             space_id = space['id']
             corners = np.array(space['corners'])
             
-            # 1. Extract ROI
             roi = self.detector.extract_parking_roi(image, space)
             
-            # 2. Extract Features
             features = self.extractor.extract_combined_features(roi)
             
-            # 3. Classify Occupancy
             prediction, confidence = self.classifier.predict(features)
             occupancy_status = 'Occupied' if prediction == 1 else 'Empty'
             
@@ -161,10 +158,6 @@ if __name__ == "__main__":
             
         cv2.imshow("Parking Analysis Result", display_image)
         
-        image_name = Path(image_path).stem
-        output_path = f"data/results/result_{image_name}.jpg"
-        cv2.imwrite(output_path, result_image)
-        print(f"\nResult image saved to {output_path}")
         
         print("\nPress any key to load next image, or 'q' to quit...")
         key = cv2.waitKey(0)
